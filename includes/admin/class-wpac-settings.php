@@ -41,16 +41,13 @@ class WPAC_Settings {
     }
 
     public function output(){
-        echo '<pre>'; print_r($_POST);  echo '</pre>';
-        die('sdfsdf');
         // Save settings if data has been posted
         if ( ! empty( $_POST ) && isset( $_POST[ 'save_wpac_settings' ] ) ) {
             $this->save();
         }
-        // $record = new ArrayObject();
-        // $query = new AirpressQuery( "Employer", 0 );
-        // $employers = new AirpressCollection( $query );
-        //echo '<pre>'; print_r($this->user_meta_keys());  echo '</pre>';
+        
+        $current_users_mapping = get_option( 'users_table_mapping' );
+        $current_usermeta_mapping = get_option( 'usermeta_table_mapping' );
         include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/admin/views/html-admin-wpac-settings.php' );
     }
 
@@ -69,12 +66,14 @@ class WPAC_Settings {
         global $wpdb;
         $sql = "SELECT distinct $wpdb->usermeta.meta_key FROM $wpdb->usermeta";
         $meta_keys = $wpdb->get_results( $sql );
-        return array_map(
+        $meta_keys = array_map(
                     function ( $object ) {
                         return $object->meta_key;
                     },
                     $meta_keys
                 );
+        $meta_keys = apply_filters( 'wpac_settings_user_meta_keys', $meta_keys );
+        return $meta_keys;
     }
 
     public static function save(){
@@ -84,8 +83,30 @@ class WPAC_Settings {
 
         $post_vars = $_POST;
 
-        echo '<pre>'; print_r($post_vars);  echo '</pre>';
-        die('sdfsf');
+        if( isset( $post_vars[ 'users' ] ) ){
+            $users_table_mapping = [];
+
+            foreach ( $post_vars[ 'users' ] as $key => $mapped_field ) {
+                if( isset( $post_vars[ 'users' ][ $key ] ) && $post_vars[ 'users' ][ $key ] ){
+                    $users_table_mapping[ $key ] = $mapped_field;
+                }
+            }
+
+            update_option( 'users_table_mapping', $users_table_mapping, 'no' );
+        }
+
+
+        if( isset( $post_vars[ 'usermeta' ] ) ){
+            $usermeta_table_mapping = [];
+
+            foreach ( $post_vars[ 'usermeta' ] as $key => $mapped_field ) {
+                if( isset( $post_vars[ 'usermeta' ][ $key ] ) && $post_vars[ 'usermeta' ][ $key ] ){
+                    $usermeta_table_mapping[ $key ] = $mapped_field;
+                }
+            }
+
+            update_option( 'usermeta_table_mapping', $usermeta_table_mapping, 'no' );
+        }
 
     }
 

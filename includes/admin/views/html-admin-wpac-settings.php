@@ -10,11 +10,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="wrap woocommerce">
     <form method="post" id="mainform" action="" enctype="multipart/form-data">
         <h2>User Fields - Airtable Mapping</h2>
-        <h4>Main User Table</h4>
+        <h3>Main User Table</h3>
         <table class="form-table">
             <tbody>
                 <?php
                     foreach ( $this->user_table_columns() as $column ) {
+                        $value = isset( $current_users_mapping[ $column ] ) ? $current_users_mapping[ $column ] : '';
                         ?>
                         <tr valign="top">
                             <th scope="row">
@@ -23,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 </label>
                             </th>
                             <td>
-                                <input type="text" name="<?php echo 'users[' . $column . ']'; ?>" value=""/>
+                                <input type="text" name="<?php echo 'users[' . $column . ']'; ?>" value="<?php echo $value; ?>"/>
                             </td>
                         </tr>
                         <?php
@@ -31,11 +32,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                 ?>
             </tbody>
         </table>
-        <h4>User Meta Fields</h4>
+        <h3>User Meta Fields</h3>
         <table class="form-table">
             <tbody>
                 <?php
                     foreach ( $this->user_meta_keys() as $column ) {
+                        $value = isset( $current_usermeta_mapping[ $column ] ) ? $current_usermeta_mapping[ $column ] : '';
                         ?>
                         <tr valign="top">
                             <th scope="row">
@@ -44,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                 </label>
                             </th>
                             <td>
-                                <input type="text" name="<?php echo 'usermeta[' . $column . ']'; ?>" value=""/>
+                                <input type="text" name="<?php echo 'usermeta[' . $column . ']'; ?>" value="<?php echo $value; ?>"/>
                             </td>
                         </tr>
                         <?php
