@@ -44,7 +44,6 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
             $record = new ArrayObject();
             $query = new AirpressQuery( "Employer", 0 );
             $employers = new AirpressCollection( $query );
-
             if( $airtable_id ){
                 $user['id'] = $airtable_id;
                 $record = new AirpressRecord( $user, $employers );
@@ -55,7 +54,6 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
             if( ! $record || ! sizeof( $record ) ){
 
                 $airtable_field = $this->get_mapped_fields( 'user_email' );
-
                 if( ! empty( $airtable_field ) ){
                     $record = $employers->lookup( $airtable_field , $user_data->user_email );
                 }
@@ -65,7 +63,6 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
             if( ! $record || ! sizeof( $record ) ){
 
                 $airtable_field = $this->get_mapped_fields( 'user_login' );
-
                 if( ! empty( $airtable_field ) ){
                     $record = $employers->lookup( $airtable_field , $user_data->user_login );
                 }
@@ -76,10 +73,10 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
 
             foreach( $mapped_fields as $wp_field => $airtable_field  ){
                 if( isset( $user_data->$wp_field ) ){
-                    $user_fields[ $airtable_field ] = $user_data->$wp_field;
+                    $user_fields[ $airtable_field ] = (string)$user_data->$wp_field;
                 }
                 else {
-                    $user_fields[ $airtable_field ] = get_user_meta( $user_data->ID, $wp_field, true );
+                    $user_fields[ $airtable_field ] = (string)get_user_meta( $user_data->ID, $wp_field, true );
                 }
             }
 
