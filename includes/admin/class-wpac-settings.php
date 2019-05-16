@@ -45,7 +45,7 @@ class WPAC_Settings {
         if ( ! empty( $_POST ) && isset( $_POST[ 'save_wpac_settings' ] ) ) {
             $this->save();
         }
-        
+
         $current_users_mapping = get_option( 'users_table_mapping' );
         $current_usermeta_mapping = get_option( 'usermeta_table_mapping' );
         include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/admin/views/html-admin-wpac-settings.php' );
@@ -88,7 +88,7 @@ class WPAC_Settings {
 
             foreach ( $post_vars[ 'users' ] as $key => $mapped_field ) {
                 if( isset( $post_vars[ 'users' ][ $key ] ) && $post_vars[ 'users' ][ $key ] ){
-                    $users_table_mapping[ $key ] = $mapped_field;
+                    $users_table_mapping[ $key ] = sanitize_text_field( $mapped_field );
                 }
             }
 
@@ -101,7 +101,7 @@ class WPAC_Settings {
 
             foreach ( $post_vars[ 'usermeta' ] as $key => $mapped_field ) {
                 if( isset( $post_vars[ 'usermeta' ][ $key ] ) && $post_vars[ 'usermeta' ][ $key ] ){
-                    $usermeta_table_mapping[ $key ] = $mapped_field;
+                    $usermeta_table_mapping[ $key ] = sanitize_text_field( $mapped_field );
                 }
             }
 

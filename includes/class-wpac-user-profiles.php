@@ -26,18 +26,12 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
          */
         public function __construct() {
             add_action( 'profile_update', [ $this, 'after_profile_update'], 9999, 2 );
-            add_action( 'edit_user_profile_update', [ $this, 'profile_update'], 9999 );
-            add_action( 'personal_options_update', [ $this, 'profile_update'], 9999 );
         }
 
         public function after_profile_update( $user_id, $old_user_data ){
             $airtable_id = get_user_meta( $user_id, '_airtable_id', true );
             $user_data = get_userdata( $user_id );
             $record = $this->update_airtable_record( $airtable_id, $user_data );
-        }
-
-        public function profile_update( $user_id ){
-
         }
 
         public function update_airtable_record( $airtable_id, $user_data ){
@@ -83,10 +77,11 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
                 }
             }
 
+
             // still no record - now we need to create one
             if( ! $record || ! sizeof( $record ) ){
                 $new_user[ 'fields' ] = $user_fields;
-                $record = new AirpressRecord( $new_user, $employers );
+                $record = $employers->createRecord( $new_user[ 'fields' ] );
             }
 
             // test the record exists just in case it still hasn't been found or created
