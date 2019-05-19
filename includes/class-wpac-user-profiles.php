@@ -29,15 +29,25 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
         }
 
         public function after_profile_update( $user_id, $old_user_data ){
-            $airtable_id = get_user_meta( $user_id, '_airtable_id', true );
+            $config = WPAC_Settings::get_current_config();
             $user_data = get_userdata( $user_id );
-            $record = $this->update_airtable_record( $airtable_id, $user_data );
+
+            $has_role = array_intersect( $config->wpac_roles, $user_data->roles );
+            if ( count( $has_role ) > 0 ) {
+                $airtable_id = get_user_meta( $user_id, '_airtable_id', true );
+                $this->update_airtable_record(  $config, $user_data, $airtable_id );
+            }
+            else {
+                var_dump($user_data->roles);
+                die('dsfsdf');
+            }
         }
 
-        public function update_airtable_record( $airtable_id, $user_data ){
+        public function update_airtable_record( $config, $user_data, $airtable_id ){
             $record = new ArrayObject();
-            $query = new AirpressQuery( "Employer", 0 );
+            $query = new AirpressQuery( $config->wpac_table_name, $config->wpac_config );
             $employers = new AirpressCollection( $query );
+
             if( $airtable_id ){
                 $user['id'] = $airtable_id;
                 $record = new AirpressRecord( $user, $employers );

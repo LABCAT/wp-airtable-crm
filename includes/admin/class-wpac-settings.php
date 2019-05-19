@@ -46,8 +46,14 @@ class WPAC_Settings {
             $this->save();
         }
 
+        global $wp_roles;
+        $configs = get_airpress_configs( "airpress_cx", false );
+        $wpac_config = get_option( 'wpac_config' );
+        $wpac_table_name = get_option( 'wpac_table_name' );
+        $wpac_roles = get_option( 'wpac_roles' );
         $current_users_mapping = get_option( 'users_table_mapping' );
         $current_usermeta_mapping = get_option( 'usermeta_table_mapping' );
+
         include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/admin/views/html-admin-wpac-settings.php' );
     }
 
@@ -83,6 +89,31 @@ class WPAC_Settings {
 
         $post_vars = $_POST;
 
+        if( isset( $post_vars[ 'wpac_config' ] ) ){
+            update_option( 'wpac_config', sanitize_text_field( $post_vars[ 'wpac_config' ] ), 'no' );
+        }
+
+        if( isset( $post_vars[ 'wpac_table_name' ] ) ){
+            update_option( 'wpac_table_name', sanitize_text_field( $post_vars[ 'wpac_table_name' ] ), 'no' );
+        }
+
+        if( isset( $post_vars[ 'wpac_roles' ] ) ){
+            global $wp_roles;
+            $wpac_roles = [];
+
+            foreach ( $wp_roles->roles as $role ) {
+                $name = $role[ 'name' ];
+                if( isset( $post_vars[ 'wpac_roles' ][ $name ] ) ){
+                    $wpac_roles[ $name ] = 'selected';
+                }
+                else {
+                    $wpac_roles[ $name ] = '';
+                }
+            }
+
+            update_option( 'wpac_roles', $wpac_roles, 'no' );
+        }
+
         if( isset( $post_vars[ 'users' ] ) ){
             $users_table_mapping = [];
 
@@ -110,6 +141,31 @@ class WPAC_Settings {
 
     }
 
+    /* used in WPAC_User_Profiles class */
+    public static function get_current_config(){
+        $config = new stdClass();
+
+        $config->wpac_config = intval(
+            str_replace(
+                'Config-',
+                '',
+                get_option( 'wpac_config' )
+            )
+        );
+
+        $config->wpac_table_name = get_option( 'wpac_table_name' );
+
+        $selected_roles = [];
+        $wpac_roles = get_option( 'wpac_roles' );
+        foreach( $wpac_roles as $role_name => $selected ){
+            if( $selected ){
+                $selected_roles[] = $role_name;
+            }
+        }
+        $config->wpac_roles = $selected_roles;
+
+        return $config;
+    }
 }
 
 endif;
