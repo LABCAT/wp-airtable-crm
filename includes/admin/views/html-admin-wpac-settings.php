@@ -5,7 +5,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-$config_exists = falsel
+$config_exists = false;
 ?>
 <div class="wrap woocommerce">
     <form method="post" id="mainform" action="" enctype="multipart/form-data">
