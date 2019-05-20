@@ -56,20 +56,16 @@ $config_exists = falsel
                 <?php
                     $col_count = 0;
                     $total_roles = count( $wp_roles->roles );
-                    foreach ( $wp_roles->roles as $role ) {
-                        echo "<pre>";
-                        print_r($role);
-                        echo "</pre>";
-                        die('sdfsdf');
-                        $name = $role[ 'name' ];
-                        $checked = ( isset( $wpac_roles[ $name ] ) && $wpac_roles[ $name ] === 'selected' ) ? 'checked="checked"' : '';
+                    foreach ( $wp_roles->roles as $role_key => $role_values ) {
+                        $name = $role_values[ 'name' ];
+                        $checked = ( isset( $wpac_roles[ $role_key ] ) && $wpac_roles[ $role_key ] === 'selected' ) ? 'checked="checked"' : '';
                         if( $col_count % 4 == 0 ){
                             echo '<tr valign="top">';
                         }
                         ?>
                             <td>
-                                <label for="<?php echo 'wpac_roles[' . $name . ']'; ?>">
-                                    <input type="checkbox" name="<?php echo 'wpac_roles[' . $name . ']'; ?>" <?php echo $checked; ?>/>
+                                <label for="<?php echo 'wpac_roles[' . $role_key . ']'; ?>">
+                                    <input type="checkbox" name="<?php echo 'wpac_roles[' . $role_key . ']'; ?>" <?php echo $checked; ?>/>
                                     <?php echo $name;  ?>
                                 </label>
                             </td>

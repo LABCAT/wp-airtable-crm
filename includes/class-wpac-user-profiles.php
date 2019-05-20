@@ -37,10 +37,6 @@ if ( ! class_exists( 'WPAC_User_Profiles', false ) ) {
                 $airtable_id = get_user_meta( $user_id, '_airtable_id', true );
                 $this->update_airtable_record(  $config, $user_data, $airtable_id );
             }
-            else {
-                var_dump($user_data->roles);
-                die('dsfsdf');
-            }
         }
 
         public function update_airtable_record( $config, $user_data, $airtable_id ){

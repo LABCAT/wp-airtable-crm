@@ -101,13 +101,12 @@ class WPAC_Settings {
             global $wp_roles;
             $wpac_roles = [];
 
-            foreach ( $wp_roles->roles as $role ) {
-                $name = $role[ 'name' ];
-                if( isset( $post_vars[ 'wpac_roles' ][ $name ] ) ){
-                    $wpac_roles[ $name ] = 'selected';
+            foreach ( $wp_roles->roles as $role_key => $role_values ) {
+                if( isset( $post_vars[ 'wpac_roles' ][ $role_key ] ) ){
+                    $wpac_roles[ $role_key ] = 'selected';
                 }
                 else {
-                    $wpac_roles[ $name ] = '';
+                    $wpac_roles[ $role_key ] = '';
                 }
             }
 
