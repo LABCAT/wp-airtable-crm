@@ -76,11 +76,9 @@ class WP_Airtable_CRM {
     }
 
     public function includes(){
-        include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/class-wpac-user-profiles.php' );
 
-        if ( is_admin() ) {
-            include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/admin/class-wpac-settings.php' );
-        }
+        include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/admin/class-wpac-settings.php' );
+        include_once( AIRTABLE_CRM_PLUGIN_DIR . '/includes/class-wpac-user-profiles.php' );
     }
 }
 
